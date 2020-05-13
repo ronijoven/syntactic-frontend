@@ -69,39 +69,39 @@ class List extends Component {
     }
 
     handleEditData = editData => {
-        console.log("editData");
-        console.log(editData);
-        this.setState({
-          action: "edit", 
-          editData: editData,
-          selectedFile: editData.selectedFile
-        },this.updateData(editData));
-      }
+      console.log("editData");
+      console.log(editData);
+      this.setState({
+        action: "edit", 
+        editData: editData,
+        selectedFile: editData.selectedFile
+      },this.updateData(editData));
+    }
 
-      updateData = (editData) => {
-        var HOST = SystemVars.HOST;
-        axios 
-          .put(HOST + `/address/`, editData)
-          .then(response => {
-            this.setState({ snackMessage: "Address Updated Successfully!" });
-            this.handleSnackbar();
-            return true;
-          })
-          .catch(err => {
-            console.log(err);
-            this.setState({ snackMessage: "Address Update Failed!" });
-            this.handleSnackbar();
-            return false;
-          }
-        );
-      }
+    updateData = (editData) => {
+      var HOST = SystemVars.HOST;
+      axios 
+        .put(HOST + `/address/`, editData)
+        .then(response => {
+          this.setState({ snackMessage: "Address Updated Successfully!" });
+          this.handleSnackbar();
+          return true;
+        })
+        .catch(err => {
+          console.log(err);
+          this.setState({ snackMessage: "Address Update Failed!" });
+          this.handleSnackbar();
+          return false;
+        }
+      );
+    }
 
-      handleNew = e => {
-        e.preventDefault();
-        this.setState({action: "add"},this.handleInsert(e));
-      }
+    handleNew = e => {
+      e.preventDefault();
+      this.setState({action: "add"},this.handleInsert(e));
+    }
 
-      handleInsert = e => {
+    handleInsert = e => {
         console.log("inserted");
         var HOST = SystemVars.HOST;
         var newData = {
@@ -145,15 +145,33 @@ class List extends Component {
       this.deleteItem(params.id);
     }
 
-    handleDeleteItem = DeleteItem => {
-      this.setState({action: "delete"});
-      var params = { 
-        id: DeleteItem.id,
-        action: "delete"
-      };
-      this.deleteItem(params.id);
+    deleteItem = (id) => {
+      var HOST = SystemVars.HOST;
+      axios 
+        .delete(HOST + `/api/delete`, {
+          params: {
+            id: id ,
+            dbname: 'address'
+          }
+        })
+        .then(response => {
+          this.setState({ snackMessage: "Address Deleted Successfully!" });
+          this.handleSnackbar();
+          this.getDatabaseCount();
+          this.loadcategories({
+            limit: this.state.limit,
+            page: this.state.currentPage
+          })
+          return true;
+        })
+        .catch(err => {
+          console.log(err);
+          this.setState({ snackMessage: "Address Delete Failed!" });
+          this.handleSnackbar();
+          return false;
+        }
+      );
     }
-
     handleFirst = e => {
       this.setState({ first: e.target.value });
     }

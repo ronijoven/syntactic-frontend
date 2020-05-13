@@ -48,7 +48,19 @@ class Detail extends Component {
         selectedId: id.id
     });
   };
-
+  handleDelete = e => {
+    e.preventDefault();
+    this.setState({ deleteModal: false });
+    var deleteData = {
+      id: this.state.id,
+      img_filename: this.state.img_filename
+    };
+    this.props.onDeleteData(deleteData);
+  };
+  
+  setId = (theId) => {
+    this.setState({ selectedId: theId });
+  }
   handleFirst = e => {
     this.setState({ first: e.target.value });
   };
@@ -105,11 +117,10 @@ class Detail extends Component {
   handleDelete = e => {
     e.preventDefault();
     this.setState({ deleteModal: false });
-    var deleteCategory = {
-      id: this.state.id,
-      img_filename: this.state.img_filename
+    var deleteData = {
+      id: this.state.id
     };
-    this.props.onDeleteCategory(deleteCategory);
+    this.props.onDeleteData(deleteData);
   };
   
   setId = (theId) => {
